@@ -12,7 +12,6 @@ public class MainTest {
     BrowserContext context;
     Page page;
 
-
     @BeforeClass
     static void launchBrowser() {
         playwright = Playwright.create();
@@ -45,6 +44,11 @@ public class MainTest {
         System.out.println(fullName.inputValue());
         page.getByPlaceholder("name@example.com").click();
         page.keyboard().press("Shift+A");
+        Locator currentAddress = page.getByPlaceholder("Current Address");
+        currentAddress.focus();
+        currentAddress.fill("Test address");
+        currentAddress.blur();
+        assertThat(currentAddress).not().isFocused();
         Locator submitButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit"));
         assertThat(submitButton).isVisible();
         assertThat(submitButton).isEnabled();
@@ -108,5 +112,13 @@ public class MainTest {
         page.locator("//div[@id ='draggable' and text()='Drag me']")
                 .dragTo(page.locator("(//div[@id ='droppable']/p[text()='Drop here'])[1]"));
         assertThat(page.locator("(//div[@id ='droppable']/p)[1]")).containsText("Dropped");
+    }
+
+    @Test
+    void webTables() {
+        page.navigate("https://demoqa.com/webtables");
+        page.locator("//select").selectOption("5 rows");
+        assertThat(page.getByRole(AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Previous"))).isDisabled();
     }
 }
