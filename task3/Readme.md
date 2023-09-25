@@ -1,0 +1,1 @@
+<h1> Тесты запускаются командой <br> mvn clean test -Dtest=MainTest </h1>
