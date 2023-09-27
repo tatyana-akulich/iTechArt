@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.Cookie;
-import org.example.dto.Book;
-import org.example.dto.GetBooks;
-import org.example.dto.GetUserId;
-import org.example.util.PropertiesLoader;
-import org.example.util.Utils;
+import by.itechart.dto.Book;
+import by.itechart.dto.GetBooks;
+import by.itechart.dto.GetUserId;
+import by.itechart.util.PropertiesLoader;
+import by.itechart.util.Utils;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;

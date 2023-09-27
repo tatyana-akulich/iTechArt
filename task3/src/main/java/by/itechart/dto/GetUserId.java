@@ -1,4 +1,4 @@
-package org.example.dto;
+package by.itechart.dto;
 
 import java.util.List;
 

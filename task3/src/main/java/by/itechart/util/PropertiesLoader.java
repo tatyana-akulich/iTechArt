@@ -1,4 +1,4 @@
-package org.example.util;
+package by.itechart.util;
 
 import java.io.IOException;
 import java.io.InputStream;

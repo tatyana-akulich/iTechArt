@@ -1,4 +1,4 @@
-package org.example.dto;
+package by.itechart.dto;
 
 public class Book {
     String isbn;

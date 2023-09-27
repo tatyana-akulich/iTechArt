@@ -1,4 +1,4 @@
-package org.example.util;
+package by.itechart.util;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Random;
 
 public class Utils {
+    static int screenshotNumber = 1;
+
     public static void takeScreenShot(Page page) {
         page.screenshot(new Page.ScreenshotOptions()
-                .setPath(Paths.get("screenshot.png"))
+                .setPath(Paths.get("screenshot" + screenshotNumber + ".png"))
                 .setFullPage(true));
+        screenshotNumber++;
     }
 
     public static int generateRandomInt(int bound) {
