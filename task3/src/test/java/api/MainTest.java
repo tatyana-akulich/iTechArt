@@ -109,7 +109,7 @@ public class MainTest {
         Response response = page.waitForResponse(r -> r.url().equals("https://demoqa.com/BookStore/v1/Books")
                 && r.request().method().equals("GET"), () -> {
             page.locator("//span[@class='text' and text()= 'Book Store']").click();
-            Utils.takeScreenShot(page);
+            Utils.takeScreenShot(page, "bookstore");
         });
         assertTrue(response.ok());
         GetBooks result = new Gson().fromJson(response.text(), GetBooks.class);

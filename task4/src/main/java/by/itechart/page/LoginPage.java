@@ -1,16 +1,23 @@
 package by.itechart.page;
 
 import by.itechart.util.PropertiesLoader;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
 import java.util.Properties;
 
 public class LoginPage implements BasePage {
-    Page page;
+    private final Page page;
+    private final Locator userNameInput;
+    private final Locator passwordInput;
+    private final Locator loginButton;
 
     public LoginPage(Page page) {
         this.page = page;
+        this.userNameInput = page.locator("#userName");
+        this.passwordInput = page.locator("#password");
+        this.loginButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"));
     }
 
     public LoginPage open() {
@@ -23,17 +30,17 @@ public class LoginPage implements BasePage {
     }
 
     public LoginPage enterUserName() {
-        page.locator("#userName").fill(loadProperties().getProperty("userName"));
+        userNameInput.fill(loadProperties().getProperty("userName"));
         return this;
     }
 
     public LoginPage enterPassword() {
-        page.locator("#password").fill(loadProperties().getProperty("password"));
+        passwordInput.fill(loadProperties().getProperty("password"));
         return this;
     }
 
     public LoginPage clickLogin() {
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")).click();
+        loginButton.click();
         return this;
     }
 }

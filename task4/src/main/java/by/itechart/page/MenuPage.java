@@ -1,16 +1,18 @@
 package by.itechart.page;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 public class MenuPage implements BasePage {
-    Page page;
+    private final Page page;
+    private final Locator bookStoreListItem;
 
     public MenuPage(Page page) {
         this.page = page;
+        this.bookStoreListItem = page.locator("//span[@class='text' and text()= 'Book Store']");
     }
 
-    public BookStorePage openBookStore() {
-        page.locator("//span[@class='text' and text()= 'Book Store']").click();
-        return new BookStorePage(page);
+    public void openBookStore() {
+        bookStoreListItem.click();
     }
 }

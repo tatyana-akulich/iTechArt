@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Utils {
-    static int screenshotNumber = 1;
-
-    public static void takeScreenShot(Page page) {
+    public static void takeScreenShot(Page page, String description) {
         page.screenshot(new Page.ScreenshotOptions()
-                .setPath(Paths.get("screenshot" + screenshotNumber + ".png"))
+                .setPath(Paths.get("screenshot_" + description + ".png"))
                 .setFullPage(true));
-        screenshotNumber++;
+
     }
 
     public static int generateRandomInt(int bound) {
