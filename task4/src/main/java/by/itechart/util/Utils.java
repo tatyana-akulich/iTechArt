@@ -19,7 +19,7 @@ public class Utils {
     }
 
     public static int generateRandomInt(int bound) {
-        return new Random().nextInt(bound);
+        return new Random().nextInt(bound) + 1;
     }
 
     public static Cookie getCookieByName(BrowserContext context, String name) {
