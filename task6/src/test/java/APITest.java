@@ -1,30 +1,27 @@
-import by.itechart.dto.Book;
 import by.itechart.dto.GetBooks;
 import by.itechart.dto.GetUserId;
 import by.itechart.page.BookDescriptionPage;
 import by.itechart.page.BookStorePage;
 import by.itechart.page.MenuPage;
-import by.itechart.page.ProfilePage;
 import by.itechart.util.*;
 import com.google.gson.Gson;
 import com.microsoft.playwright.APIResponse;
-import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Response;
-import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MainTest extends BaseTest {
+public class APITest extends BaseTest {
     String token;
     String userID;
     String baseUrl = "https://demoqa.com";
@@ -83,6 +80,4 @@ public class MainTest extends BaseTest {
         assertThat(result.getUsername()).isEqualTo(properties.getProperty("userName"));
         assertThat(result.getBooks()).isEmpty();
     }
-
-
 }

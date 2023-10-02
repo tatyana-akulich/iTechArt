@@ -15,7 +15,7 @@ public class PropertiesLoader {
         return properties;
     }
 
-    public static Properties loadProperties(){
+    public static Properties loadProperties() {
         return loadProperties("authentication.properties");
     }
 }
