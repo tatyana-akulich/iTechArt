@@ -1,8 +1,5 @@
 import by.itechart.dto.Book;
-import by.itechart.page.BookDescriptionPage;
-import by.itechart.page.BookStorePage;
-import by.itechart.page.MenuPage;
-import by.itechart.page.ProfilePage;
+import by.itechart.page.*;
 import by.itechart.util.RandomGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,6 +17,7 @@ public class ProfileTest extends BaseTest {
     BookStorePage bookStorePage;
     BookDescriptionPage bookDescriptionPage;
     ProfilePage profilePage;
+    DeleteConfirmationPage deleteConfirmationPage;
 
     @Test
     public void testAddDeleteBooksToProfile() {
@@ -27,10 +25,11 @@ public class ProfileTest extends BaseTest {
         bookStorePage = new BookStorePage(page);
         bookDescriptionPage = new BookDescriptionPage(page);
         profilePage = new ProfilePage(page);
+        deleteConfirmationPage = new DeleteConfirmationPage(page);
+
         menuPage.openBookStore();
-        int amountOfBooksToAdd = RandomGenerator.generateInt(4) + 1;
-        Set<Book> booksToAdd = new HashSet<>();
-        addRandomBooksToStore(amountOfBooksToAdd, booksToAdd);
+        int amountOfBooksToAdd = RandomGenerator.generateInt(2, 5);
+        Set<Book> booksToAdd = addRandomBooksToStore(amountOfBooksToAdd);
 
         menuPage.openProfile();
         assertThat(profilePage.getAllBooksLocator()).hasCount(amountOfBooksToAdd);
@@ -38,11 +37,11 @@ public class ProfileTest extends BaseTest {
 
         String bookToDelete = profilePage.getBookByNumberLocator(2).textContent();
         profilePage.deleteBookByNumber(2);
-        assertThat(profilePage.getModalTitleTextLocator()).hasText("Delete Book");
-        assertThat(profilePage.getModalBodyTextLocator()).hasText("Do you want to delete this book?");
-        assertThat(profilePage.getOkModalButtonLocator()).isVisible();
-        assertThat(profilePage.getCancelModalButtonLocator()).isVisible();
-        profilePage.clickOkModalButton();
+        assertThat(deleteConfirmationPage.getModalTitleTextLocator()).hasText("Delete Book");
+        assertThat(deleteConfirmationPage.getModalBodyTextLocator()).hasText("Do you want to delete this book?");
+        assertThat(deleteConfirmationPage.getOkModalButtonLocator()).hasText("OK");
+        assertThat(deleteConfirmationPage.getCancelModalButtonLocator()).hasText("Cancel");
+        deleteConfirmationPage.clickOkModalButton();
         page.onceDialog(dialog -> {
             assertEquals(dialog.message(), "Book deleted.");
             dialog.accept();
@@ -53,11 +52,11 @@ public class ProfileTest extends BaseTest {
         assertThat(profilePage.getAllBooksLocator().allTextContents()).doesNotContain(bookToDelete);
 
         profilePage.clickDeleteAllBooks();
-        assertThat(profilePage.getModalTitleTextLocator()).hasText("Delete All Books");
-        assertThat(profilePage.getModalBodyTextLocator()).hasText("Do you want to delete all books?");
-        assertThat(profilePage.getOkModalButtonLocator()).isVisible();
-        assertThat(profilePage.getCancelModalButtonLocator()).isVisible();
-        profilePage.clickOkModalButton();
+        assertThat(deleteConfirmationPage.getModalTitleTextLocator()).hasText("Delete All Books");
+        assertThat(deleteConfirmationPage.getModalBodyTextLocator()).hasText("Do you want to delete all books?");
+        assertThat(deleteConfirmationPage.getOkModalButtonLocator()).hasText("OK");
+        assertThat(deleteConfirmationPage.getCancelModalButtonLocator()).hasText("Cancel");
+        deleteConfirmationPage.clickOkModalButton();
         page.onceDialog(dialog -> {
             assertEquals(dialog.message(), "All Books deleted.");
             dialog.accept();
@@ -65,11 +64,12 @@ public class ProfileTest extends BaseTest {
         assertThat(profilePage.getAllBooksLocator()).hasCount(0);
     }
 
-    void addRandomBooksToStore(int amountOfBooksToAdd, Set<Book> booksToAdd) {
+    Set<Book> addRandomBooksToStore(int amountOfBooksToAdd) {
+        Set<Book> booksToAdd = new HashSet<>();
         int randomNumberOfBook;
         int totalAmountOfBooks = bookStorePage.getAllBooksTitlesLocator().count();
         for (int i = 1; i <= amountOfBooksToAdd; i++) {
-            randomNumberOfBook = RandomGenerator.generateInt(totalAmountOfBooks);
+            randomNumberOfBook = RandomGenerator.generateInt(1, totalAmountOfBooks);
             if (booksToAdd.add(bookStorePage.getBookByNumber(randomNumberOfBook))) {
                 bookStorePage.chooseBookByNumber(randomNumberOfBook);
                 bookDescriptionPage.addBookToCollection();
@@ -83,5 +83,6 @@ public class ProfileTest extends BaseTest {
                 System.out.printf("Book number %d is already in the collection%n", randomNumberOfBook);
             }
         }
+        return booksToAdd;
     }
 }

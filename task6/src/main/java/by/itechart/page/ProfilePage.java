@@ -12,24 +12,15 @@ public class ProfilePage implements BasePage {
     private final Page page;
     private final Locator logOutButton;
     private final Locator listOfBookTitles;
-    private final Locator modalTitleText;
-    private final Locator modalBodyText;
-    private final Locator okModalButton;
-    private final Locator cancelModalButton;
     private final Locator deleteAllBooksButton;
-    private final String deleteIconLocator = "(//span[@id='delete-record-undefined'])[%d]";
-    private final String bookTitleLocator = "(//span[@class=\"mr-2\"]/a)[%d]";
+    private final Locator deleteRecordIcon;
 
     public ProfilePage(Page page) {
         this.page = page;
         this.logOutButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Log out"));
         this.listOfBookTitles = page.locator(".mr-2");
-        this.modalTitleText = page.locator("//div[@class='modal-title h4']");
-        this.modalBodyText = page.locator(".modal-body");
-        this.okModalButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK"));
-        this.cancelModalButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Cancel"));
         this.deleteAllBooksButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete All Books"));
-
+        this.deleteRecordIcon = page.locator("#delete-record-undefined");
     }
 
     public Locator getLogOutButton() {
@@ -40,32 +31,12 @@ public class ProfilePage implements BasePage {
         return listOfBookTitles;
     }
 
-    public Locator getOkModalButtonLocator() {
-        return okModalButton;
-    }
-
     public Locator getBookByNumberLocator(int number) {
-        return page.locator(String.format(bookTitleLocator, number));
-    }
-
-    public Locator getModalTitleTextLocator() {
-        return modalTitleText;
-    }
-
-    public Locator getModalBodyTextLocator() {
-        return modalBodyText;
-    }
-
-    public void clickOkModalButton() {
-        okModalButton.click();
+        return listOfBookTitles.nth(number - 1);
     }
 
     public void clickDeleteAllBooks() {
         deleteAllBooksButton.click();
-    }
-
-    public Locator getCancelModalButtonLocator() {
-        return cancelModalButton;
     }
 
     public Set<Book> getAllBooks(int amountOfBooks) {
@@ -83,6 +54,6 @@ public class ProfilePage implements BasePage {
     }
 
     public void deleteBookByNumber(int number) {
-        page.locator(String.format(deleteIconLocator, number)).click();
+        deleteRecordIcon.nth(number - 1).click();
     }
 }

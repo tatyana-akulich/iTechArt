@@ -60,10 +60,10 @@ public class APITest extends BaseTest {
     }
 
     void changeAmountOfPagesWithRoute() {
-        int newAmountOfPages = RandomGenerator.generateInt(1000);
+        int newAmountOfPages = RandomGenerator.generateInt(1, 1000);
         Router.changeAmountOfPagesInBooks(page, newAmountOfPages);
         BookStorePage bookStorePage = new BookStorePage(page);
-        int randomNumberOfBook = RandomGenerator.generateInt(bookStorePage.getAllBooksTitlesLocator().count());
+        int randomNumberOfBook = RandomGenerator.generateInt(1, bookStorePage.getAllBooksTitlesLocator().count());
         bookStorePage.chooseBookByNumber(randomNumberOfBook);
         assertThat(new BookDescriptionPage(page).getAmountOfPagesLocator()).hasText(String.valueOf(newAmountOfPages));
     }

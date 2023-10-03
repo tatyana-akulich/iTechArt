@@ -49,6 +49,7 @@ public class BaseTest {
             page.navigate("https://demoqa.com/login");
         } catch (PlaywrightException e) {
             System.out.println("NoSuchFileException - Failed to read storage state from file");
+            System.exit(-1);
         }
     }
 
