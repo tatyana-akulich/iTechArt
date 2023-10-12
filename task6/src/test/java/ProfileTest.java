@@ -34,6 +34,7 @@ public class ProfileTest extends BaseTest {
         int amountOfBooksToAdd = RandomGenerator.generateInt(2, 5);
         Set<Book> booksToAdd = addRandomBooksToStore(amountOfBooksToAdd);
 
+        page.reload();
         menuPage.openProfile();
         assertThat(profilePage.getAllBooksLocator()).hasCount(amountOfBooksToAdd);
         assertThat(profilePage.getAllBooks(amountOfBooksToAdd)).containsAll(booksToAdd);
@@ -80,8 +81,7 @@ public class ProfileTest extends BaseTest {
                     assertEquals(dialog.message(), "Book added to your collection.");
                     dialog.accept();
                 });
-                menuPage.openProfile();
-                menuPage.openBookStore();
+                bookDescriptionPage.goBackToBookStore();
             } else {
                 i--;
                 System.out.printf("Book number %d is already in the collection%n", randomNumberOfBook);
