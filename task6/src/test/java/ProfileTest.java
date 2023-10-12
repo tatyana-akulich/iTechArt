@@ -1,6 +1,7 @@
 import by.itechart.dto.Book;
 import by.itechart.page.*;
 import by.itechart.util.RandomGenerator;
+import com.microsoft.playwright.Dialog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -26,6 +27,8 @@ public class ProfileTest extends BaseTest {
         bookDescriptionPage = new BookDescriptionPage(page);
         profilePage = new ProfilePage(page);
         deleteConfirmationPage = new DeleteConfirmationPage(page);
+
+        clearProfile();
 
         menuPage.openBookStore();
         int amountOfBooksToAdd = RandomGenerator.generateInt(2, 5);
@@ -77,12 +80,25 @@ public class ProfileTest extends BaseTest {
                     assertEquals(dialog.message(), "Book added to your collection.");
                     dialog.accept();
                 });
-                bookDescriptionPage.goBackToBookStore();
+                menuPage.openProfile();
+                menuPage.openBookStore();
             } else {
                 i--;
                 System.out.printf("Book number %d is already in the collection%n", randomNumberOfBook);
             }
         }
         return booksToAdd;
+    }
+
+    public void clearProfile() {
+        menuPage.openProfile();
+        page.waitForCondition(() -> profilePage.emptyProfileLocator().count() != 0
+                || profilePage.getAllBooksLocator().count() > 0);
+        if (profilePage.emptyProfileLocator().count() == 0) {
+            profilePage.clickDeleteAllBooks();
+            deleteConfirmationPage.clickOkModalButton();
+            page.onceDialog(Dialog::accept);
+        }
+        page.waitForCondition(() -> page.locator(".rt-noData").count() != 0);
     }
 }

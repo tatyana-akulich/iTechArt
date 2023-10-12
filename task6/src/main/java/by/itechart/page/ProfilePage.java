@@ -14,6 +14,10 @@ public class ProfilePage implements BasePage {
     private final Locator listOfBookTitles;
     private final Locator deleteAllBooksButton;
     private final Locator deleteRecordIcon;
+    private final Locator bookTitleText;
+    private final Locator authorText;
+    private final Locator publisherText;
+    private final Locator noBooksInProfileText;
 
     public ProfilePage(Page page) {
         this.page = page;
@@ -21,10 +25,18 @@ public class ProfilePage implements BasePage {
         this.listOfBookTitles = page.locator(".mr-2");
         this.deleteAllBooksButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete All Books"));
         this.deleteRecordIcon = page.locator("#delete-record-undefined");
+        this.bookTitleText = page.locator("(//span[@class=\"mr-2\"])/a");
+        this.authorText = page.locator("(//span[@class=\"mr-2\"])/following::div[1]");
+        this.publisherText = page.locator("(//span[@class=\"mr-2\"])/following::div[2]");
+        this.noBooksInProfileText = page.locator(".rt-noData");
     }
 
     public Locator getLogOutButton() {
         return logOutButton;
+    }
+
+    public void logOut() {
+        logOutButton.click();
     }
 
     public Locator getAllBooksLocator() {
@@ -43,11 +55,9 @@ public class ProfilePage implements BasePage {
         Set<Book> booksInProfile = new HashSet<>();
         for (int i = 1; i <= amountOfBooks; i++) {
             booksInProfile.add(Book.builder()
-                    .title(page.locator(String.format("(//span[@class=\"mr-2\"])[%d]/a", i)).textContent())
-                    .author(page.locator
-                            (String.format("(//span[@class=\"mr-2\"])[%d]/following::div[1]", i)).textContent())
-                    .publisher(page.locator
-                            (String.format("(//span[@class=\"mr-2\"])[%d]/following::div[2]", i)).textContent())
+                    .title(bookTitleText.nth(i - 1).textContent())
+                    .author(authorText.nth(i - 1).textContent())
+                    .publisher(publisherText.nth(i - 1).textContent())
                     .build());
         }
         return booksInProfile;
@@ -55,5 +65,9 @@ public class ProfilePage implements BasePage {
 
     public void deleteBookByNumber(int number) {
         deleteRecordIcon.nth(number - 1).click();
+    }
+
+    public Locator emptyProfileLocator() {
+        return noBooksInProfileText;
     }
 }

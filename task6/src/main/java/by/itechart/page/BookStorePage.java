@@ -4,32 +4,38 @@ import by.itechart.dto.Book;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.util.function.BooleanSupplier;
+
 public class BookStorePage implements BasePage {
 
     private final Page page;
     private final Locator listOfBookTitles;
-    private final String bookTitleLocator = "(//span[@class=\"mr-2\"])[%s]";
+    private final Locator bookTitleText;
+    private final Locator authorText;
+    private final Locator publisherText;
 
     public BookStorePage(Page page) {
         this.page = page;
         this.listOfBookTitles = page.locator(".mr-2");
+        this.bookTitleText = page.locator("(//span[@class=\"mr-2\"])/a");
+        this.authorText = page.locator("(//span[@class=\"mr-2\"])/following::div[1]");
+        this.publisherText = page.locator("(//span[@class=\"mr-2\"])/following::div[2]");
     }
 
     public Locator getAllBooksTitlesLocator() {
+        page.waitForCondition(() -> listOfBookTitles.count() > 0);
         return listOfBookTitles;
     }
 
     public void chooseBookByNumber(int number) {
-        page.locator(String.format(bookTitleLocator, number)).click();
+        listOfBookTitles.nth(number - 1).click();
     }
 
     public Book getBookByNumber(int number) {
         return Book.builder()
-                .title(page.locator(String.format("(//span[@class=\"mr-2\"])[%d]/a", number)).textContent())
-                .author(page.locator
-                        (String.format("(//span[@class=\"mr-2\"])[%d]/following::div[1]", number)).textContent())
-                .publisher(page.locator
-                        (String.format("(//span[@class=\"mr-2\"])[%d]/following::div[2]", number)).textContent())
+                .title(bookTitleText.nth(number - 1).textContent())
+                .author(authorText.nth(number - 1).textContent())
+                .publisher(publisherText.nth(number - 1).textContent())
                 .build();
     }
 }

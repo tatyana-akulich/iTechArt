@@ -20,13 +20,14 @@ public class BaseTest {
     Page page;
     APIRequestContext request;
     String stateFile = "state.json";
+    LoginPage loginPage;
 
     @BeforeAll
     void beforeAll() {
         launchBrowser();
         context = browser.newContext();
         page = context.newPage();
-        LoginPage loginPage = new LoginPage(page);
+        loginPage = new LoginPage(page);
         login(loginPage);
         context.storageState(new BrowserContext.StorageStateOptions().setPath(Paths.get(stateFile)));
     }
