@@ -11,9 +11,7 @@ import com.microsoft.playwright.options.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -22,10 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class APITest extends BaseTest {
-    String token;
-    String userID;
-    String baseUrl = "https://demoqa.com";
-
     @Test
     void testAPI() {
         checkAndSaveCookies();
@@ -44,8 +38,6 @@ public class APITest extends BaseTest {
             assertThat(cookie).isNotNull();
             assertThat(cookie.value).isNotEmpty();
         }
-        token = CookieHandler.getCookieByName(context, "token").value;
-        userID = CookieHandler.getCookieByName(context, "userID").value;
     }
 
     void waitForResponseAndCheckResult() {
@@ -69,14 +61,12 @@ public class APITest extends BaseTest {
     }
 
     void checkBooksWithUserId() {
-        Map<String, String> headers = new HashMap<>();
-        Properties properties = PropertiesLoader.loadProperties();
-        headers.put("Authorization", "Bearer " + token);
-        createApiRequestContext(baseUrl, headers);
-        String path = String.format("/Account/v1/User/%s", userID);
-        APIResponse userInfo = request.get(path);
+        prepareApiRequest();
+        String getBooksFromProfilePath = "/Account/v1/User/" + userID;
+        APIResponse userInfo = request.get(getBooksFromProfilePath);
         assertTrue(userInfo.ok());
         GetUserId result = new Gson().fromJson(userInfo.text(), GetUserId.class);
+        Properties properties = PropertiesLoader.loadProperties();
         assertThat(result.getUsername()).isEqualTo(properties.getProperty("userName"));
         assertThat(result.getBooks()).isEmpty();
     }

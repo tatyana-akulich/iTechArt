@@ -1,6 +1,9 @@
 import by.itechart.dto.Book;
+import by.itechart.dto.GetUserId;
 import by.itechart.page.*;
 import by.itechart.util.RandomGenerator;
+import com.google.gson.Gson;
+import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Dialog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,6 +14,7 @@ import java.util.Set;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProfileTest extends BaseTest {
@@ -91,14 +95,15 @@ public class ProfileTest extends BaseTest {
     }
 
     public void clearProfile() {
-        menuPage.openProfile();
-        page.waitForCondition(() -> profilePage.emptyProfileLocator().count() != 0
-                || profilePage.getAllBooksLocator().count() > 0);
-        if (profilePage.emptyProfileLocator().count() == 0) {
-            profilePage.clickDeleteAllBooks();
-            deleteConfirmationPage.clickOkModalButton();
-            page.onceDialog(Dialog::accept);
+        prepareApiRequest();
+        String getBooksFromProfilePath = "/Account/v1/User/" + userID;
+        APIResponse userInfo = request.get(getBooksFromProfilePath);
+        assertTrue(userInfo.ok());
+        GetUserId result = new Gson().fromJson(userInfo.text(), GetUserId.class);
+        if (result.getBooks().size() != 0) {
+            String deleteBooksFromProfilePath = "/BookStore/v1/Books/" + userID;
+            APIResponse deleteBookFromProfile = request.delete(deleteBooksFromProfilePath);
+            assertTrue(deleteBookFromProfile.ok());
         }
-        page.waitForCondition(() -> page.locator(".rt-noData").count() != 0);
     }
 }

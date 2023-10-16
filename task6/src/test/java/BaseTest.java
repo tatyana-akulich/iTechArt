@@ -1,5 +1,6 @@
 import by.itechart.page.LoginPage;
 import by.itechart.page.ProfilePage;
+import by.itechart.util.CookieHandler;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -21,6 +23,9 @@ public class BaseTest {
     APIRequestContext request;
     String stateFile = "state.json";
     LoginPage loginPage;
+    String token;
+    String userID;
+    String baseUrl = "https://demoqa.com";
 
     @BeforeAll
     void beforeAll() {
@@ -83,5 +88,13 @@ public class BaseTest {
                 .enterPassword()
                 .clickLogin();
         assertThat(new ProfilePage(page).getLogOutButton()).isVisible();
+    }
+
+    void prepareApiRequest(){
+        token = CookieHandler.getCookieByName(context, "token").value;
+        userID = CookieHandler.getCookieByName(context, "userID").value;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + token);
+        createApiRequestContext(baseUrl, headers);
     }
 }
