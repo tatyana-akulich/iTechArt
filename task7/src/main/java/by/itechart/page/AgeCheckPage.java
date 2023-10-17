@@ -3,8 +3,7 @@ package by.itechart.page;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
-public class AgeCheckPage implements BasePage {
-    private final Page page;
+public class AgeCheckPage extends BasePage {
     private final Locator viewPageButton;
     private final Locator ageControlText;
     private final Locator yearOfBirthSelect;
@@ -28,5 +27,11 @@ public class AgeCheckPage implements BasePage {
     public AgeCheckPage clickViewPage() {
         viewPageButton.click();
         return this;
+    }
+
+    public void fillCheckAgeBlock(){
+        if (getAgeControlText().isVisible()) {
+            chooseYearOfBirth("2000").clickViewPage();
+        }
     }
 }

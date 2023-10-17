@@ -1,6 +1,5 @@
 import by.itechart.page.*;
 import com.microsoft.playwright.Download;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.Test;
@@ -9,9 +8,11 @@ import org.junit.jupiter.api.TestInstance;
 import java.io.File;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DiscountTest extends BaseTest {
@@ -20,60 +21,53 @@ public class DiscountTest extends BaseTest {
     HomeContentPage contentPage;
     SteamDetailsPage detailsPage;
     AgeCheckPage ageCheckPage;
-    SteamInstallPage installPage;
-    String steamTitle;
+    HeaderPage headerPage;
     String priceOnContentPage;
-    String priceOnDetailsPage;
-    String discountOnDetailsPage;
     int maxDiscount;
+    double maxPrice;
     String maxDiscountOnContentPage;
 
     @Test
     public void testInstallSteamWithDiscount() {
         homePage = new HomePage(mainPage);
         contentPage = new HomeContentPage(mainPage);
-        homePage.open().chooseCategoriesMenuItem();
-        String categoryName = Categories.Anime.getTitle();  //choose Category from Enum
-        chooseCategory(categoryName);
+        homePage.open().clickCategoriesMenuItem();
+        String categoryName = Categories.Action.getTitle();
+        homePage.chooseCategory(categoryName);
 
         contentPage.clickNewAndTrending();
-        mainPage.waitForCondition(() -> contentPage.countPreviewWidgetPhotos() > 1);
+        mainPage.waitForCondition(() -> contentPage.getItemDateLocator().nth(0).textContent().contains("2023"));
 
-        List<String> discounts = new ArrayList<>();
-        for (Locator steamItem : contentPage.getSteamsWithDiscounts()) {
-            discounts.add(steamItem.textContent());
-        }
-
+        List<String> discounts = contentPage.getSteamsWithDiscounts();
         if (discounts.size() > 0) {
-            openFirstSteamWithMaxDiscount(discounts);
+            maxDiscount = contentPage.getMaxDiscount(discounts);
+            maxDiscountOnContentPage = "-" + maxDiscount + "%";
+            priceOnContentPage = contentPage.getFirstPriceWithMaxDiscount(maxDiscountOnContentPage);
+            openSteamWithMaxDiscount();
         } else {
-            openFirstSteamWithMaxPrice();
+            maxPrice = contentPage.getMaxPrice();
+            priceOnContentPage = "$" + String.format(Locale.US, "%.02f", maxPrice);
+            openSteamWithMaxPrice();
         }
 
         detailsPage = new SteamDetailsPage(steam);
         ageCheckPage = new AgeCheckPage(steam);
-        installPage = new SteamInstallPage(steam);
+        headerPage = new HeaderPage(steam);
         steam.waitForLoadState(LoadState.LOAD);
 
-        fillCheckAgeBlock();
+        ageCheckPage.fillCheckAgeBlock();
 
-        steamTitle = detailsPage.getSteamTitle();
-        String buyWithTitle = "Buy " + steamTitle;
         if (maxDiscount > 0) {
-            discountOnDetailsPage = detailsPage.getSteamDiscount(buyWithTitle);
-            priceOnDetailsPage = detailsPage.getSteamPrice(buyWithTitle);
-            assertEquals(discountOnDetailsPage, maxDiscountOnContentPage);
-            assertEquals(priceOnContentPage + " USD", priceOnDetailsPage);
-        } else {
-            priceOnDetailsPage = detailsPage.getPriceForSteamWithoutDiscount(buyWithTitle);
-            assertEquals(priceOnContentPage + " USD", priceOnDetailsPage);
+            assertThat(detailsPage.getAllDiscountsLocator().allTextContents()).contains(maxDiscountOnContentPage);
         }
+        assertThat(detailsPage.getAllPrices()).contains(priceOnContentPage + " USD");
+
         downloadSteam();
     }
 
     public void downloadSteam() {
         detailsPage.clickInstallSteam();
-        Download download = steam.waitForDownload(installPage::clickInstallSteam);
+        Download download = steam.waitForDownload(headerPage::clickInstallSteam);
         String fileName = "downloads/" + download.suggestedFilename();
         download.saveAs(Paths.get(fileName));
         File downloadedFile = new File(fileName);
@@ -84,49 +78,16 @@ public class DiscountTest extends BaseTest {
         }
     }
 
-    public void chooseCategory(String category) {
-        homePage.chooseCategory(category);
-        mainPage.waitForLoadState(LoadState.LOAD);
-        mainPage.mouse().wheel(0, 3000);
-    }
-
-    public void openFirstSteamWithMaxDiscount(List<String> discounts) {
-        List<Integer> discountsInt = new ArrayList<>();
-        for (String element : discounts
-        ) {
-            discountsInt.add(Integer.parseInt(element.substring(1, element.length() - 1)));
-        }
-        maxDiscount = Collections.max(discountsInt);
-        maxDiscountOnContentPage = "-" + maxDiscount + "%";
-        priceOnContentPage = contentPage.getFirstPriceWithMaxDiscount(maxDiscountOnContentPage);
+    public void openSteamWithMaxDiscount() {
         steam = context.waitForPage(() -> {
             contentPage.openSteamByDiscount(maxDiscountOnContentPage);
         });
     }
 
-    public void openFirstSteamWithMaxPrice() {
-        List<String> prices = new ArrayList<>();
-        for (Locator steamItem : contentPage.getSteamsWithPrice()) {
-            prices.add(steamItem.textContent());
-        }
-        List<Double> pricesDouble = new ArrayList<>();
-        for (String element : prices
-        ) {
-            if (element.matches("\\$[\\d]+\\.?[\\d]*")) {
-                pricesDouble.add(Double.parseDouble(element.substring(1)));
-            }
-        }
-        double maxPrice = Collections.max(pricesDouble);
-        priceOnContentPage = "$" + String.format(Locale.US, "%.02f", maxPrice);
+    public void openSteamWithMaxPrice() {
         steam = context.waitForPage(() -> {
             contentPage.openSteamByPrice(priceOnContentPage);
         });
-    }
-
-    public void fillCheckAgeBlock() {
-        if (ageCheckPage.getAgeControlText().isVisible()) {
-            ageCheckPage.chooseYearOfBirth("2000").clickViewPage();
-        }
     }
 }
 

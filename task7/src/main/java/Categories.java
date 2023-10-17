@@ -1,5 +1,6 @@
 public enum Categories {
     Horror ("Horror"),
+    Action ("Action"),
     Strategy("Strategy"),
     Software("Software"),
     Survival("Survival"),

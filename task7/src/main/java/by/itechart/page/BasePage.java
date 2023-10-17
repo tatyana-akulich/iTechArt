@@ -1,11 +1,14 @@
 package by.itechart.page;
 
-public interface BasePage {
-    default BasePage open(){
-        return null;
-    };
+import com.microsoft.playwright.Page;
 
-    default boolean isOpened(){
+public class BasePage {
+    Page page;
+
+    BasePage open() {
+        return null;
+    }
+    boolean isOpened() {
         return true;
     }
 }

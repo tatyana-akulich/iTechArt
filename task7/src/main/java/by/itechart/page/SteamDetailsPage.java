@@ -3,40 +3,33 @@ package by.itechart.page;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
-public class SteamDetailsPage implements BasePage {
-    private final Page page;
+import java.util.List;
+
+public class SteamDetailsPage extends BasePage {
     private final Locator installSteamButton;
-    private final Locator steamTitleText;
-    private final String steamDiscount = "//h1[contains(text(), \"%s\")]/following-sibling::" +
-            "div//div [@class=\"discount_pct\"]";
-    private final String steamPrice = "//h1[contains(text(), \"%s\")]/following-sibling::" +
-            "div//div [@class=\"discount_final_price\"]";
-    private final String steamPriceWithoutDiscount = "//h1[contains(text(), \"%s\")]/following-sibling::" +
-            "div//div [@class=\"game_purchase_price price\"]";
+    private final Locator pricesWithoutDiscount;
+    private final Locator pricesWithDiscount;
+    private final Locator allDiscounts;
 
     public SteamDetailsPage(Page page) {
         this.page = page;
         this.installSteamButton = page.locator("//div[normalize-space() = \"Install Steam\"]");
-        this.steamTitleText = page.locator("#appHubAppName");
+        this.pricesWithoutDiscount = page.locator(".game_purchase_price");
+        this.pricesWithDiscount = page.locator(".game_area_purchase .discount_final_price");
+        this.allDiscounts = page.locator(".game_area_purchase .discount_pct");
     }
 
     public void clickInstallSteam() {
         installSteamButton.click();
     }
 
-    public String getSteamTitle() {
-        return steamTitleText.textContent();
+    public List<String> getAllPrices() {
+        List<String> allPrices = pricesWithDiscount.allTextContents();
+        allPrices.addAll(pricesWithoutDiscount.allTextContents());
+        return allPrices;
     }
 
-    public String getSteamDiscount(String title) {
-        return page.locator(String.format(steamDiscount, title)).nth(0).textContent();
-    }
-
-    public String getSteamPrice(String title) {
-        return page.locator(String.format(steamPrice, title)).nth(0).textContent();
-    }
-
-    public String getPriceForSteamWithoutDiscount(String title) {
-        return page.locator(String.format(steamPriceWithoutDiscount, title)).nth(0).textContent().trim();
+    public Locator getAllDiscountsLocator() {
+        return allDiscounts;
     }
 }
