@@ -101,7 +101,7 @@ public class ProfileTest extends BaseTest {
         assertTrue(userInfo.ok());
         GetUserId result = new Gson().fromJson(userInfo.text(), GetUserId.class);
         if (result.getBooks().size() != 0) {
-            String deleteBooksFromProfilePath = "/BookStore/v1/Books/" + userID;
+            String deleteBooksFromProfilePath = "/BookStore/v1/Books?UserId=" + userID;
             APIResponse deleteBookFromProfile = request.delete(deleteBooksFromProfilePath);
             assertTrue(deleteBookFromProfile.ok());
         }
