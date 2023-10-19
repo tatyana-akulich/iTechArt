@@ -12,7 +12,7 @@ public class SteamDetailsPage extends BasePage {
     private final Locator allDiscounts;
 
     public SteamDetailsPage(Page page) {
-        this.page = page;
+        super (page);
         this.installSteamButton = page.locator("//div[normalize-space() = \"Install Steam\"]");
         this.pricesWithoutDiscount = page.locator(".game_purchase_price");
         this.pricesWithDiscount = page.locator(".game_area_purchase .discount_final_price");

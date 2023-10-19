@@ -6,13 +6,12 @@ import com.microsoft.playwright.Page;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HomeContentPage extends BasePage {
     private final Locator newAndTrendingMenuItem;
-    private final Locator previewWidgetImage;
+    private final Locator allItemsMenuItem;
     private final Locator discountText;
     private final Locator priceText;
     private final Locator dateText;
@@ -26,14 +25,13 @@ public class HomeContentPage extends BasePage {
             "//div[@class=\"salepreviewwidgets_StoreSaleWidgetHalfLeft_2Va3O\"]";
 
     public HomeContentPage(Page page) {
-        this.page = page;
+        super(page);
         this.newAndTrendingMenuItem = page.locator("//div[text()=\"New & Trending\"]");
-        this.previewWidgetImage = page.locator("//div[@class=\"facetedbrowse_FacetedBrowseItems_NO-IP\"]" +
-                "//div[@class=\"salepreviewwidgets_StoreSaleWidgetHalfLeft_2Va3O\"]");
         this.discountText = page.locator("//div[@class=\"facetedbrowse_FacetedBrowseItems_NO-IP\"]" +
                 "//div[@class=\"salepreviewwidgets_StoreSaleDiscountBox_2fpFv\"]");
         this.priceText = page.locator("//div[@class=\"facetedbrowse_FacetedBrowseItems_NO-IP\"]" +
                 "//div[@class=\"salepreviewwidgets_StoreSalePriceBox_Wh0L8\"]");
+        this.allItemsMenuItem =page.locator("//div[text()=\"All Items\"]");
         this.dateText = page.locator(".facetedbrowse_FacetedBrowseItems_NO-IP .salepreviewwidgets_StoreSaleWidgetRelease_3eOdk");
     }
 
@@ -41,12 +39,17 @@ public class HomeContentPage extends BasePage {
         newAndTrendingMenuItem.click();
     }
 
+
     public List<String> getSteamsWithDiscounts() {
         return discountText.allTextContents();
     }
 
     public List<String> getSteamsWithPrice() {
         return priceText.allTextContents();
+    }
+
+    public Locator getSteamsWithPriceLocator(){
+        return priceText;
     }
 
     public String getFirstPriceWithMaxDiscount(String discountForLocator) {
@@ -63,6 +66,10 @@ public class HomeContentPage extends BasePage {
 
     public Locator getItemDateLocator() {
         return dateText;
+    }
+
+    public void clickAllItems(){
+        allItemsMenuItem.click();
     }
 
     public Double getMaxPrice() {

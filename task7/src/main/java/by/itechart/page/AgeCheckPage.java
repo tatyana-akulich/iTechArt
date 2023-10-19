@@ -9,7 +9,7 @@ public class AgeCheckPage extends BasePage {
     private final Locator yearOfBirthSelect;
 
     public AgeCheckPage(Page page) {
-        this.page = page;
+        super(page);
         this.ageControlText = page.locator("//div[text()=\"Please enter your birth date to continue:\"]");
         this.yearOfBirthSelect = page.locator("#ageYear");
         this.viewPageButton = page.getByText("View Page");
@@ -29,7 +29,7 @@ public class AgeCheckPage extends BasePage {
         return this;
     }
 
-    public void fillCheckAgeBlock(){
+    public void fillCheckAgeBlock() {
         if (getAgeControlText().isVisible()) {
             chooseYearOfBirth("2000").clickViewPage();
         }

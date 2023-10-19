@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,8 +36,12 @@ public class DiscountTest extends BaseTest {
         String categoryName = Categories.Action.getTitle();
         homePage.chooseCategory(categoryName);
 
+        contentPage.clickAllItems();
+        mainPage.waitForCondition(() -> (contentPage.getSteamsWithPriceLocator().count() > 0));
+        List<String> pricesInAllItemsSection = contentPage.getSteamsWithPrice();
+
         contentPage.clickNewAndTrending();
-        mainPage.waitForCondition(() -> contentPage.getItemDateLocator().nth(0).textContent().contains("2023"));
+        mainPage.waitForCondition(() -> (contentPage.getSteamsWithPriceLocator().count() > 0) & !(contentPage.getSteamsWithPrice().equals(pricesInAllItemsSection)));
 
         List<String> discounts = contentPage.getSteamsWithDiscounts();
         if (discounts.size() > 0) {

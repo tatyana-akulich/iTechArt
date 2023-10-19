@@ -7,7 +7,7 @@ public class HeaderPage extends BasePage {
     private final Locator installSteamButton;
 
     public HeaderPage(Page page) {
-        this.page = page;
+        super (page);
         this.installSteamButton = page.locator("//a[@class = \"about_install_steam_link\" and text()=\"Install Steam\"]");
     }
 
