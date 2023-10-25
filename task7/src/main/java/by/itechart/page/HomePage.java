@@ -1,9 +1,10 @@
 package by.itechart.page;
 
-import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class HomePage extends BasePage {
     private final Locator categoriesMenuItem;
     private final Locator allItemsMenuItem;
@@ -18,30 +19,36 @@ public class HomePage extends BasePage {
     }
 
     public HomePage open() {
+        log.info("Open home page");
         page.navigate("https://store.steampowered.com/");
         return this;
     }
 
     public void clickCategoriesMenuItem() {
+        log.info("Hover on Categories");
         categoriesMenuItem.hover();
     }
 
     public HomePage clickCategory(String category) {
+        log.info("Open category {}", category);
         page.locator(String.format(categoryMenuItem, category)).click();
         return this;
     }
 
     public void scrollTillContentSaleSection() {
+        log.debug("Scroll with content section is visible");
         contentSaleSection.scrollIntoViewIfNeeded();
     }
 
     public void chooseCategory(String category) {
+        log.info("Click on necessary category and wait till content part load");
         clickCategory(category);
         scrollUntilElementIsVisible();
         scrollTillContentSaleSection();
     }
 
     public void scrollUntilElementIsVisible() {
+        log.debug("Scroll till All Items menu item is visible");
         while (!(allItemsMenuItem.isVisible())) {
             page.mouse().wheel(0, 600);
         }

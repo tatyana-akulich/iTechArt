@@ -2,7 +2,9 @@ package by.itechart.page;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class AgeCheckPage extends BasePage {
     private final Locator viewPageButton;
     private final Locator ageControlText;
@@ -16,15 +18,18 @@ public class AgeCheckPage extends BasePage {
     }
 
     public Locator getAgeControlText() {
+        log.debug("Check if age control page is displayed");
         return ageControlText;
     }
 
     public AgeCheckPage chooseYearOfBirth(String year) {
+        log.debug("Fill year of birth");
         yearOfBirthSelect.selectOption(year);
         return this;
     }
 
     public AgeCheckPage clickViewPage() {
+        log.info("Check if age is suitable -> pass to details page");
         viewPageButton.click();
         return this;
     }
