@@ -1,0 +1,16 @@
+2023-10-27 20:24:52,984 [INFO ] Start DiscountTest 
+2023-10-27 20:24:53,056 [INFO ] Open home page 
+2023-10-27 20:24:55,591 [INFO ] Hover on Categories 
+2023-10-27 20:24:55,753 [INFO ] Click on necessary category and wait till content part load 
+2023-10-27 20:24:55,761 [INFO ] Open category Action 
+2023-10-27 20:24:59,471 [WARN ] Wait till block with steams in All Items is loaded: amount of steams is positive 
+2023-10-27 20:25:00,406 [WARN ] Wait till block with steams in New & Trending is loaded: amount of steams is positive and steams diverse from the ones in All items 
+2023-10-27 20:25:01,096 [INFO ] Case when there are discounts on the page 
+2023-10-27 20:25:01,097 [INFO ] Get max discount in New & Trending 
+2023-10-27 20:25:01,125 [WARN ] Wait for steam details page to open 
+2023-10-27 20:25:01,140 [INFO ] Open first steam with maximum discount - -30% 
+2023-10-27 20:25:03,067 [INFO ] Case if there steams with discounts 
+2023-10-27 20:25:03,068 [INFO ] Assert: details page contains max discount from content page 
+2023-10-27 20:25:04,089 [INFO ] Assert: details page contains max price from content page 
+2023-10-27 20:25:04,089 [INFO ] Get list of prices on details page 
+2023-10-27 20:25:04,111 [INFO ] Finish DiscountTest 

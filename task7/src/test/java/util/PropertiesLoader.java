@@ -55,7 +55,7 @@ public class PropertiesLoader {
             folderForDownloadFiles = properties.getProperty("download.dir");
             logLevel = properties.getProperty("log.level");
             logDir = properties.getProperty("log.dir") == null ? "logs" : properties.getProperty("log.dir");
-            logFileName = properties.getProperty("log.file.name") == null ? "test.DiscountTest" : properties.getProperty("log.file.name");
+            logFileName = properties.getProperty("log.file.name") == null ? "DiscountTest" : properties.getProperty("log.file.name");
             logFileEnable = Boolean.parseBoolean(properties.getProperty("log.file.enabled"));
             logFilePreserve = Boolean.parseBoolean(properties.getProperty("log.file.preserve"));
         } catch (IOException ex) {

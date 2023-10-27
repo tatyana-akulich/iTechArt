@@ -1,5 +1,3 @@
-package test;
-
 import com.microsoft.playwright.Download;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.LoadState;
@@ -84,7 +82,7 @@ public class DiscountTest extends BaseTest {
         assertThat(detailsPage.getAllPrices()).contains(priceOnContentPage + " USD");
 
         //downloadSteam();
-        log.info("Finish test.DiscountTest");
+        log.info("Finish DiscountTest");
     }
 
     public void downloadSteam() {
