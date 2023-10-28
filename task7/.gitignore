@@ -42,3 +42,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/.allure/
+/.idea/
+/allure-results/
+/downloads/
+/steamlogs/
