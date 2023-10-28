@@ -11,6 +11,12 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea
+.allure
+allure-results/
+downloads/
+steamlogs/
+logs/
 
 ### Eclipse ###
 .apt_generated
