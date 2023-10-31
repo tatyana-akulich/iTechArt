@@ -50,7 +50,6 @@ public class PropertiesLoader {
         Properties properties = new Properties();
         try (InputStream inputStream = PropertiesLoader.class.getClassLoader().getResourceAsStream("configuration.properties")) {
             properties.load(inputStream);
-            browserName = properties.getProperty("browser.name");
             headless = Boolean.parseBoolean(properties.getProperty("browser.headless"));
             folderForDownloadFiles = properties.getProperty("download.dir");
             logLevel = properties.getProperty("log.level");
