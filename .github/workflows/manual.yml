@@ -17,6 +17,20 @@ on:
         required: true
         # The data type of the input
         type: string
+      browserName:
+            # Friendly description to be shown in the UI instead of 'name'
+        description: 'Choose browser'
+        # Default value if no value is explicitly provided
+        default: chrome
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: choice
+        options:
+        - webkit
+        - firefox
+        - chrome        
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
